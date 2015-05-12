@@ -1,21 +1,21 @@
 var usersTemplate = ' \
 <div class="users-show cf"> \
   <div class="user-filters"> \
-    User Filters \
+    用户过滤器 \
     <div class="filters-container"></div> \
     <div class="add add-filter"> \
       <span class="glyphicon glyphicon-plus"></span> \
-      filter \
+      过滤 \
     </div> \
-    <input class="btn btn-success find-users" type="submit" value="Find Users"> \
+    <input class="btn btn-success find-users" type="submit" value="查询用户"> \
     <img class="spinner" src="spinner.gif"> \
   </div> \
   <div class="users-table"> \
-    Filtered Users \
+    过滤的用户 \
     <div class="table-container"></div> \
   </div> \
   <div class="user-show"> \
-    Selected User \
+    选择的用户 \
     <div class="user-show-container"></div> \
   </div> \
 </div> \

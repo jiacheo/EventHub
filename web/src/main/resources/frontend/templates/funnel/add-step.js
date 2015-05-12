@@ -1,6 +1,6 @@
 var addStepTemplate = ' \
   <div class="add add-step"> \
     <span class="glyphicon glyphicon-plus"></span> \
-    step \
+    步骤 \
   </div> \
 ';

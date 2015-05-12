@@ -1,13 +1,13 @@
 var cohortTemplate = ' \
 <div class="cohort-show cf"> \
-  <h2>Cohort Definition</h2><br> \
+  <h2>Cohort定义</h2><br> \
   <div class="cohort-definition"></div> \
   <div class="range-container"> \
-    <h2>Parameters</h2><br> \
+    <h2>参数</h2><br> \
     <div class="date-container"> \
       <input type="text" id="cohortStartDate" placeholder="Start Date"> - <input type="text" id="cohortEndDate" placeholder="End Date"> \
     </div> \
-    <input class="btn btn-success calculate-btn calculate-cohort" type="submit" value="Calculate"> \
+    <input class="btn btn-success calculate-btn calculate-cohort" type="submit" value="计算"> \
     <img class="spinner" src="spinner.gif"> \
   </div> \
   <div class="cf table-container"> \

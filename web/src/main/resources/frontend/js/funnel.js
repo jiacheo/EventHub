@@ -257,7 +257,7 @@ var Funnel = (function () {
   cls.renderCompletionRate = function(eventVolumes) {
     var eventLength = eventVolumes.length;
     var completionRate = (eventVolumes[eventLength - 1] / eventVolumes[0] * 100).toFixed(2);
-    $('.completion-rate').html('<span style="font-weight: bold">' + completionRate + '%</span> Completion Rate');
+    $('.completion-rate').html('<span style="font-weight: bold">' + completionRate + '%</span> 整体转化率');
   };
 
   cls.renderFunnelGraph = function(eventVolumes) {

@@ -7,7 +7,7 @@ var stepTemplate =' \
    </div> \
    <div class="add add-filter"> \
      <span class="glyphicon glyphicon-plus"></span> \
-     filter \
+     过滤器 \
    </div> \
 </div> \
 ';

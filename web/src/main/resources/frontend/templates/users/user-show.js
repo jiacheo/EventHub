@@ -1,7 +1,7 @@
 var userShowTemplate = '\
   <div class="user-show--row cf"> \
     <div class="user-properties"> \
-      <div class="user-properties--title">User Properties</div> \
+      <div class="user-properties--title">用户属性</div> \
       <br> \
       {{#properties}} \
         <dl> \
@@ -12,7 +12,7 @@ var userShowTemplate = '\
       {{/properties}} \
     </div> \
     <div class="user-show--activity-feed"> \
-      <div class="activity-feed--title">Activity Feed</div> \
+      <div class="activity-feed--title">活动</div> \
       <table class="table text--light"> \
         <tbody> \
           {{#timeline}} \
@@ -22,7 +22,7 @@ var userShowTemplate = '\
           </tr> \
           {{/timeline}} \
           {{^timeline}} \
-            No user timeline available \
+            没有用户时间线 \
           {{/timeline}} \
         </tbody> \
       </table> \

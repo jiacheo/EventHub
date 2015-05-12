@@ -4,7 +4,7 @@ var eventTemplate = ' \
   <div class="filters-container"></div> \
   <div class="add add-filter"> \
     <span class="glyphicon glyphicon-plus"></span> \
-    filter \
+    过滤 \
   </div> \
   </div>\
 ';

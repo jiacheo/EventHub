@@ -1,14 +1,14 @@
 var showMeTemplate = ' \
   <div class="show-me text--light"> \
-    <p>Show me people who did</p> \
+    <p>从节点</p> \
     &nbsp {{> event}} &nbsp \
-    <p>then came back and did</p> \
+    <p>到节点</p> \
     &nbsp {{> event}} &nbsp \
-    <p>using</p> \
+    <p>隔了</p> \
     &nbsp \
     <span> \
       <input class="two-digits" id="daysLater" type="text" name="daysLater" value="{{daysLater}}"> \
     </span> \
-    &nbsp <p>day cohorts.</p>\
+    &nbsp <p>天的留存率</p>\
   </div> \
 ';
