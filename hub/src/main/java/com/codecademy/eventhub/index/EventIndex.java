@@ -5,6 +5,8 @@ import com.codecademy.eventhub.list.IdList;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.SortedMap;
 
 public class EventIndex implements Closeable {
@@ -21,11 +23,25 @@ public class EventIndex implements Closeable {
   }
 
   public void enumerateEventIds(String startDate, String endDate, Callback callback) {
-    for (IdList idList : eventIdListMap.subMap(startDate, endDate).values()) {
+     endDate = nextDate(endDate);
+    //这里endDate是不包含的，不科学
+     for (IdList idList : eventIdListMap.subMap(startDate, endDate).values()) {
       IdList.Iterator eventIdIterator = idList.iterator();
       while (eventIdIterator.hasNext()) {
         callback.onEventId(eventIdIterator.next());
       }
+    }
+  }
+
+  private String nextDate(String date){
+    try{
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+      Date dt = dateFormat.parse(date);
+      dt = new Date(dt.getTime() + 86400000L);
+      return dateFormat.format(dt);
+    }catch (Exception e){
+      //impossible
+      return "";
     }
   }
 
