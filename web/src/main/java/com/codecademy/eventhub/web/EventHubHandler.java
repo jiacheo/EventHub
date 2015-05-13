@@ -41,7 +41,7 @@ import java.util.Properties;
 public class EventHubHandler extends AbstractHandler implements Closeable {
   private final EventHub eventHub;
   private final Map<String, Provider<Command>> commandsMap;
-  private boolean isLogging;
+  public static boolean isLogging;
 
   public EventHubHandler(EventHub eventHub, Map<String, Provider<Command>> commandsMaps) {
     this.eventHub = eventHub;
