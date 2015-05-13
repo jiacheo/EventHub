@@ -1,33 +1,33 @@
 #!/bin/bash
 
-URL="http://localhost:8080"
-today=`date +'%Y%m%d'`
+URL="http://localhost:8000"
+today=$1
 end_date=`(date -d '+14day' +'%Y%m%d' || date -v '+14d' +'%Y%m%d') 2> /dev/null`
 
 echo -e "\033[1;31m=============== event related endpoints ================\033[0m\n"
 echo -e "\033[1;32mtrack event:\033[0m anonymous user (w/ gnerated user id: generated_id_123) visited Codecademy's home page"
-curl -X POST ${URL}/events/track --data "event_type=pageview&external_user_id=generated_id_123&page=home&experiment=homepage_v1&treatment=control"
+curl -X POST ${URL}/events/track --data "&date=${today}&event_type=pageview&external_user_id=generated_id_123&page=home&experiment=homepage_v1&treatment=control"
 echo ""
 echo -e "\033[1;32mtrack event:\033[0m the user made a submission to first exercise in the home page \033[0m"
-curl -X POST ${URL}/events/track --data "event_type=submission&external_user_id=generated_id_123&exercise=homepage_1"
+curl -X POST ${URL}/events/track --data "&date=${today}&event_type=submission&external_user_id=generated_id_123&exercise=homepage_1"
 echo ""
 echo -e "\033[1;32mtrack event:\033[0m the user made a submission to the second exercise in the home page \033[0m"
-curl -X POST ${URL}/events/track --data "event_type=submission&external_user_id=generated_id_123&exercise=homepage_2"
+curl -X POST ${URL}/events/track --data "&date=${today}&event_type=submission&external_user_id=generated_id_123&exercise=homepage_2"
 echo ""
 echo -e "\033[1;32mtrack event:\033[0m the user sign up\033[0m"
-curl -X POST ${URL}/events/track --data "event_type=signup&external_user_id=generated_id_123&experiment=signup_v1&treatment=control"
+curl -X POST ${URL}/events/track --data "&date=${today}&event_type=signup&external_user_id=generated_id_123&experiment=signup_v1&treatment=control"
 echo ""
 echo -e "\033[1;32malias user :\033[0m alias from chengtao@codecademy.com to generated_id_123 \033[0m"
 curl -X POST ${URL}/users/alias --data "from_external_user_id=chengtao@codecademy.com&to_external_user_id=generated_id_123"
 echo ""
 echo -e "\033[1;32mtrack event:\033[0m the user visited Codecademy's tracks page\033[0m"
-curl -X POST ${URL}/events/track --data "event_type=pageview&external_user_id=chengtao@codecademy.com&page=tracks"
+curl -X POST ${URL}/events/track --data "&date=${today}&event_type=pageview&external_user_id=chengtao@codecademy.com&page=tracks"
 echo ""
 echo -e "\033[1;32mtrack event:\033[0m the user started the javascript track\033[0m"
-curl -X POST ${URL}/events/track --data "event_type=start_track&external_user_id=chengtao@codecademy.com&track=javascript"
+curl -X POST ${URL}/events/track --data "&date=${today}&event_type=start_track&external_user_id=chengtao@codecademy.com&track=javascript"
 echo ""
 echo -e "\033[1;32mtrack event:\033[0m the user made a submission to the first exercise in the javascript track \033[0m"
-curl -X POST ${URL}/events/track --data "event_type=submission&external_user_id=chengtao@codecademy.com&exercise=javascript_1"
+curl -X POST ${URL}/events/track --data "&date=${today}&event_type=submission&external_user_id=chengtao@codecademy.com&exercise=javascript_1"
 echo ""
 
 echo -e "\033[1;32mbatch track events for a few other users:\033[0m"
@@ -80,15 +80,15 @@ curl ${URL}/events/types
 echo ""
 
 echo -e "\033[1;32mshow all event keys for \"signup\" event type:\033[0m"
-curl '${URL}/events/keys?event_type=signup'
+curl '${URL}/events/keys?&date=${today}&event_type=signup'
 echo ""
 
 echo -e "\033[1;32mshow all event values for 'treatment' event key and \"signup\" event type:\033[0m"
-curl '${URL}/events/values?event_type=signup&event_key=treatment'
+curl '${URL}/events/values?&date=${today}&event_type=signup&event_key=treatment'
 echo ""
 
 echo -e "\033[1;32mshow all event values for 'treatment' event key, \"signup\" event type and prefix \"fa\":\033[0m"
-curl '${URL}/events/values?event_type=signup&event_key=treatment&prefix=fa'
+curl '${URL}/events/values?&date=${today}&event_type=signup&event_key=treatment&prefix=fa'
 echo ""
 
 echo -e "\033[1;32mshow all event types:\033[0m"
@@ -104,7 +104,7 @@ curl -X POST "${URL}/events/funnel" --data "start_date=${today}&end_date=${end_d
 echo ""
 
 echo -e "\033[1;32mshow cohort:\033[0m signup -> submission"
-curl -X POST "${URL}/events/cohort" --data "start_date=${today}&end_date=${end_date}&row_event_type=signup&column_event_type=submission&num_days_per_row=7&num_columns=2"
+curl -X POST "${URL}/events/cohort" --data "start_date=${today}&end_date=${end_date}&row_&date=${today}&event_type=signup&column_&date=${today}&event_type=submission&num_days_per_row=7&num_columns=2"
 echo ""
 
 echo -e "\033[1;32mshow A/B testing signup funnel (control):\033[0m pageview -> signup"
@@ -116,11 +116,11 @@ curl -X POST "${URL}/events/funnel" --data "start_date=${today}&end_date=${end_d
 echo ""
 
 echo -e "\033[1;32mshow A/B testing cohort:\033[0m signup -> submission"
-curl -X POST "${URL}/events/cohort" --data "start_date=${today}&end_date=${end_date}&row_event_type=signup&column_event_type=submission&num_days_per_row=7&num_columns=2&refk[]=experiment&refv[]=signup_v1&refk[]=treatment&refv[]=control"
+curl -X POST "${URL}/events/cohort" --data "start_date=${today}&end_date=${end_date}&row_&date=${today}&event_type=signup&column_&date=${today}&event_type=submission&num_days_per_row=7&num_columns=2&refk[]=experiment&refv[]=signup_v1&refk[]=treatment&refv[]=control"
 echo ""
 
 echo -e "\033[1;32mshow A/B testing cohort:\033[0m signup -> submission"
-curl -X POST "${URL}/events/cohort" --data "start_date=${today}&end_date=${end_date}&row_event_type=signup&column_event_type=submission&num_days_per_row=7&num_columns=2&refk[]=experiment&refv[]=signup_v1&refk[]=treatment&refv[]=fancy onboarding"
+curl -X POST "${URL}/events/cohort" --data "start_date=${today}&end_date=${end_date}&row_&date=${today}&event_type=signup&column_&date=${today}&event_type=submission&num_days_per_row=7&num_columns=2&refk[]=experiment&refv[]=signup_v1&refk[]=treatment&refv[]=fancy onboarding"
 echo ""
 
 
