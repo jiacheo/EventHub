@@ -2,11 +2,6 @@ package com.codecademy.eventhub.web;
 
 import com.codecademy.eventhub.EventHub;
 import com.codecademy.eventhub.EventHubModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.name.Names;
-import com.google.inject.util.Modules;
 import com.codecademy.eventhub.index.DatedEventIndexModule;
 import com.codecademy.eventhub.index.PropertiesIndexModule;
 import com.codecademy.eventhub.index.ShardedEventIndexModule;
@@ -15,6 +10,11 @@ import com.codecademy.eventhub.list.DmaIdListModule;
 import com.codecademy.eventhub.storage.EventStorageModule;
 import com.codecademy.eventhub.storage.UserStorageModule;
 import com.codecademy.eventhub.web.commands.Command;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
+import com.google.inject.util.Modules;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
@@ -52,6 +52,7 @@ public class EventHubHandler extends AbstractHandler implements Closeable {
   @Override
   public void handle(String target, Request baseRequest, HttpServletRequest request,
       HttpServletResponse response) throws IOException, ServletException {
+    request.setCharacterEncoding("utf-8");
     if (isLogging) {
       System.out.println(request);
     }
@@ -68,6 +69,7 @@ public class EventHubHandler extends AbstractHandler implements Closeable {
       default:
         Provider<Command> commandProvider = commandsMap.get(target);
         if (commandProvider != null) {
+
           commandProvider.get().execute(request, response);
           baseRequest.setHandled(true);
         }
