@@ -56,6 +56,8 @@ public class EventHubHandler extends AbstractHandler implements Closeable {
     if (isLogging) {
       System.out.println(request+","+baseRequest.getParameterMap());
     }
+    response.reset();
+    response.setCharacterEncoding("utf-8");
     response.setStatus(HttpServletResponse.SC_OK);
     switch (target) {
       case "/debug":
