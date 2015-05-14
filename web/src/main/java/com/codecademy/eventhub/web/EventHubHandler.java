@@ -15,6 +15,9 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import com.google.inject.util.Modules;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
@@ -42,40 +45,43 @@ public class EventHubHandler extends AbstractHandler implements Closeable {
   private final EventHub eventHub;
   private final Map<String, Provider<Command>> commandsMap;
   public static boolean isLogging;
+  private static Log log = LogFactory.getLog(EventHubHandler.class);
 
   public EventHubHandler(EventHub eventHub, Map<String, Provider<Command>> commandsMaps) {
     this.eventHub = eventHub;
     this.commandsMap = commandsMaps;
-    isLogging = false;
+    isLogging = true;
   }
 
   @Override
   public void handle(String target, Request baseRequest, HttpServletRequest request,
       HttpServletResponse response) throws IOException, ServletException {
     request.setCharacterEncoding("utf-8");
-    if (isLogging) {
-      System.out.println(request+","+baseRequest.getParameterMap());
-    }
-    response.reset();
-    response.setCharacterEncoding("utf-8");
-    response.setStatus(HttpServletResponse.SC_OK);
-    switch (target) {
-      case "/debug":
-        isLogging = !isLogging;
-        baseRequest.setHandled(true);
-        break;
-      case "/varz":
-        response.getWriter().println(eventHub.getVarz());
-        baseRequest.setHandled(true);
-        break;
-      default:
-        Provider<Command> commandProvider = commandsMap.get(target);
-        if (commandProvider != null) {
-
-          commandProvider.get().execute(request, response);
-          baseRequest.setHandled(true);
-        }
-        break;
+    try{
+      if (isLogging) {
+        log.info("[request]:"+request+","+baseRequest.getParameterMap());
+      }
+      response.reset();
+      response.setCharacterEncoding("utf-8");
+      response.setStatus(HttpServletResponse.SC_OK);
+      switch (target) {
+        case "/debug":
+          isLogging = !isLogging;
+          break;
+        case "/varz":
+          response.getWriter().println(eventHub.getVarz());
+          break;
+        default:
+          Provider<Command> commandProvider = commandsMap.get(target);
+          if (commandProvider != null) {
+            commandProvider.get().execute(request, response);
+          }
+          break;
+      }
+    }catch (Exception e){
+      log.error("unknownException", e);
+    }finally {
+      baseRequest.setHandled(true);
     }
   }
 
@@ -85,6 +91,9 @@ public class EventHubHandler extends AbstractHandler implements Closeable {
   }
 
   public static void main(String[] args) throws Exception {
+
+    configLogSystem();
+
     Properties properties = new Properties();
     properties.load(
         EventHub.class.getClassLoader().getResourceAsStream("hub.properties"));
@@ -134,22 +143,32 @@ public class EventHubHandler extends AbstractHandler implements Closeable {
 
     server.setHandler(handlers);
     securityHandler.setHandler(resourceHandler);
-
-    server.start();
-    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-      @Override
-      public void run() {
-        if (server.isStarted()) {
-          try {
-            server.stop();
-            eventHubHandler.close();
-          } catch (Exception e) {
-            e.printStackTrace();
+    try{
+      server.start();
+      Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+        @Override
+        public void run() {
+          if (server.isStarted()) {
+            try {
+              server.stop();
+              eventHubHandler.close();
+            } catch (Exception e) {
+              log.error("shudown server failed", e);
+//              e.printStackTrace();
+            }
           }
         }
-      }
-    },"Stop Jetty Hook"));
+      },"Stop Jetty Hook"));
+      server.join();
+    }catch (Exception e){
+      log.error("server occur unexpect exception", e);
+    }
+    log.warn("server is down!");
+  }
 
-    server.join();
+  private static void configLogSystem() {
+    try{
+    DOMConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.xml"));
+    }catch (Exception e){}
   }
 }

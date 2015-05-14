@@ -3,13 +3,11 @@ package com.codecademy.eventhub.web.commands;
 import com.codecademy.eventhub.EventHub;
 import com.codecademy.eventhub.base.DateHelper;
 import com.codecademy.eventhub.model.Event;
-import com.codecademy.eventhub.web.EventHubHandler;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLDecoder;
 
 @Path("/events/track")
 public class TrackEvent extends Command {
@@ -30,10 +28,10 @@ public class TrackEvent extends Command {
       date = dateHelper.getDate();
     }
     String eventType = request.getParameter("event_type");
-    String eventTypeDecode = URLDecoder.decode(eventType, "utf-8");
-    if(EventHubHandler.isLogging){
-      System.out.println("CHARSET:"+ eventType+" --->>> " + eventTypeDecode);
-    }
+//    String eventTypeDecode = URLDecoder.decode(eventType, "utf-8");
+//    if(EventHubHandler.isLogging){
+//      System.out.println("CHARSET:"+ eventType+" --->>> " + eventTypeDecode);
+//    }
     Event event = new Event.Builder(
         eventType,
         request.getParameter("external_user_id"),
