@@ -67,21 +67,22 @@ public class EventHubHandler extends AbstractHandler implements Closeable {
       switch (target) {
         case "/debug":
           isLogging = !isLogging;
+          baseRequest.setHandled(true);
           break;
         case "/varz":
           response.getWriter().println(eventHub.getVarz());
+          baseRequest.setHandled(true);
           break;
         default:
           Provider<Command> commandProvider = commandsMap.get(target);
           if (commandProvider != null) {
             commandProvider.get().execute(request, response);
+            baseRequest.setHandled(true);
           }
           break;
       }
     }catch (Exception e){
       log.error("unknownException", e);
-    }finally {
-      baseRequest.setHandled(true);
     }
   }
 
