@@ -88,6 +88,7 @@ public class ShardedEventIndexModule extends AbstractModule {
           eventIndexMap.put(eventType, individualEventIndexFactory.build(eventType));
         }
         clearBadData(eventIndexMap);
+        clearBadData(eventTypeIdMap);
 
         return new ShardedEventIndex(eventIndexFilename, individualEventIndexFactory, eventIndexMap,
             eventTypeIdMap);
@@ -99,15 +100,15 @@ public class ShardedEventIndexModule extends AbstractModule {
         Maps.<String,EventIndex>newHashMap(), Maps.<String, Integer>newHashMap());
   }
 
-  private void clearBadData(Map<String, EventIndex> eventIndexMap) {
+  private void clearBadData(Map eventIndexMap) {
     if(eventIndexMap == null || eventIndexMap.isEmpty()){
       return;
     }
 
-    Iterator<Map.Entry<String, EventIndex>> entryIterator = eventIndexMap.entrySet().iterator();
+    Iterator<Map.Entry> entryIterator = eventIndexMap.entrySet().iterator();
     while(entryIterator.hasNext()){
-      Map.Entry<String, EventIndex> entry = entryIterator.next();
-      String key = entry.getKey();
+      Map.Entry entry = entryIterator.next();
+      String key = String.valueOf(entry.getKey());
       if(key != null){
         if("".equals(key.trim())){
           entryIterator.remove();
