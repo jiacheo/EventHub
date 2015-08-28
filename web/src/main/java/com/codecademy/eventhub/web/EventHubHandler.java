@@ -118,6 +118,8 @@ public class EventHubHandler extends AbstractHandler implements Closeable {
     int port = injector.getInstance(Key.get(Integer.class, Names.named("eventhubhandler.port")));
 
     final Server server = new Server(port);
+    server.setAttribute("org.mortbay.jetty.Request.maxFormContentSize", 200000000);
+    server.setAttribute("org.eclipse.jetty.server.Request.maxFormContentSize", 200000000);
     @SuppressWarnings("ConstantConditions")
     String webDir = EventHubHandler.class.getClassLoader().getResource("frontend").toExternalForm();
     HashLoginService loginService = new HashLoginService();
