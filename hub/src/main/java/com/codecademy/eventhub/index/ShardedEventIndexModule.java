@@ -1,18 +1,19 @@
 package com.codecademy.eventhub.index;
 
+import com.codecademy.eventhub.list.DmaIdList;
+import com.codecademy.eventhub.list.IdList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.PatternFilenameFilter;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.codecademy.eventhub.list.DmaIdList;
-import com.codecademy.eventhub.list.IdList;
 
 import javax.inject.Named;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -86,6 +87,8 @@ public class ShardedEventIndexModule extends AbstractModule {
         for (String eventType : eventTypeIdMap.keySet()) {
           eventIndexMap.put(eventType, individualEventIndexFactory.build(eventType));
         }
+        clearBadData(eventIndexMap);
+
         return new ShardedEventIndex(eventIndexFilename, individualEventIndexFactory, eventIndexMap,
             eventTypeIdMap);
       } catch (IOException | ClassNotFoundException e) {
@@ -95,4 +98,66 @@ public class ShardedEventIndexModule extends AbstractModule {
     return new ShardedEventIndex(eventIndexFilename, individualEventIndexFactory,
         Maps.<String,EventIndex>newHashMap(), Maps.<String, Integer>newHashMap());
   }
+
+  private void clearBadData(Map<String, EventIndex> eventIndexMap) {
+    if(eventIndexMap == null || eventIndexMap.isEmpty()){
+      return;
+    }
+
+    Iterator<Map.Entry<String, EventIndex>> entryIterator = eventIndexMap.entrySet().iterator();
+    while(entryIterator.hasNext()){
+      Map.Entry<String, EventIndex> entry = entryIterator.next();
+      String key = entry.getKey();
+      if(key != null){
+        if("".equals(key.trim())){
+          entryIterator.remove();
+        }else{
+          if(key.contains("noload")){
+            entryIterator.remove();
+          }
+        }
+      }
+
+    }
+
+  }
+
+  public static void main(String[] args) throws IOException {
+//    File path = new File("/data/event_hub/event_index");
+//    File[] files = path.listFiles(new FileFilter() {
+//      @Override
+//      public boolean accept(File file) {
+//        return file.isDirectory() && file.getName().contains("__");
+//      }
+//    });
+//
+//    for(File file: files){
+//      String name = file.getName();
+//      String newName = name.replace("__", ">>");
+//      FileUtils.copyDirectory(file, new File(path, newName));
+//      System.out.println(name+"\t---->>>>\t"+newName);
+//    }
+
+    Map<String, String> map = Maps.newTreeMap();
+    map.put("1", "1");
+    map.put("2", "1");
+    map.put("3", "1");
+    map.put("4", "1");
+    map.put("5", "1");
+
+    System.out.println(map);
+
+    Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
+    while(iterator.hasNext()){
+      Map.Entry<String, String> next = iterator.next();
+      String key = next.getKey();
+      if("1".equals(key)){
+        iterator.remove();
+      }
+    }
+
+    System.out.println(map);
+  }
+
+
 }
