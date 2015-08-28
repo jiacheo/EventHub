@@ -29,15 +29,27 @@ var Utils = (function () {
     var self = this;
     var promises = [];
 
-    EVENT_TYPES.forEach(function (type) {
-      promises.push(self.getEventKey(type))
-    });
-    $.when.apply($,promises).done(function () {
-      [].forEach.call(arguments, function (typeKeys) {
-          $.extend(EVENT_TYPE_KEYS, typeKeys)
-      });
+    $.ajax({
+      type: 'POST',
+      url: '/events/keys',
+      data: {
+        event_types : EVENT_TYPES.join("\1")
+      }
+    }).done(function(keyMaps){
+      var km = JSON.parse(keyMaps);
+      $.extend(EVENT_TYPE_KEYS, km);
       cb();
     });
+
+    //EVENT_TYPES.forEach(function (type) {
+    //  promises.push(self.getEventKey(type))
+    //});
+    //$.when.apply($,promises).done(function () {
+    //  [].forEach.call(arguments, function (typeKeys) {
+    //      $.extend(EVENT_TYPE_KEYS, typeKeys)
+    //  });
+
+    //});
   }
 
   cls.formatDate = function (date) {

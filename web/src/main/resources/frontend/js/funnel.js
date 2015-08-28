@@ -152,6 +152,15 @@ var Funnel = (function () {
 
     Utils.getEventTypes(function (eventTypes) {
       EVENT_TYPES = JSON.parse(eventTypes);
+      var newEventTypes = [];
+      for(var i=0; i<EVENT_TYPES.length;i++){
+        var item = EVENT_TYPES[i];
+        //去掉脏数据
+        if(item.indexOf('noload')<0){
+          newEventTypes.push(item);
+        }
+      }
+      EVENT_TYPES = newEventTypes;
       Utils.getEventKeys(function () {
         self.renderAddFunnelStep();
         self.bindAddStepListener();
