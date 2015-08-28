@@ -93,6 +93,8 @@ public class EventHubHandler extends AbstractHandler implements Closeable {
 
   public static void main(String[] args) throws Exception {
 
+    System.setProperty("org.mortbay.jetty.Request.maxFormContentSize", "2000000");
+
     configLogSystem();
 
     Properties properties = new Properties();
